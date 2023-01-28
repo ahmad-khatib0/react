@@ -1,66 +1,74 @@
-import { Component } from 'react'
+import { Fragment, useState, useEffect, Component } from 'react'
 
-import User from './User'
-import classes from './Users.module.css'
+import Users from './Users'
+import classes from './UserFinder.module.css'
+import UsersContext from '../store/users-context'
+import ErrorBoundary from './ErrorBoundary'
 
-class Users extends Component {
+class UserFinder extends Component {
+  static contextType = UsersContext
+
   constructor() {
     super()
     this.state = {
-      showUsers: true,
-      more: 'Test',
+      filteredUsers: [],
+      searchTerm: '',
     }
   }
 
-  toggleUsersHandler() {
-    // this.state.showUsers = false; // NOT!
-    this.setState((curState) => {
-      return { showUsers: !curState.showUsers }
-    })
+  componentDidMount() {
+    // Send http request...
+    this.setState({ filteredUsers: this.context.users })
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.searchTerm !== this.state.searchTerm) {
+      this.setState({
+        filteredUsers: this.context.users.filter((user) => user.name.includes(this.state.searchTerm)),
+      })
+    }
+  }
+
+  searchChangeHandler(event) {
+    this.setState({ searchTerm: event.target.value })
   }
 
   render() {
-    const usersList = (
-      <ul>
-        {this.props.users.map((user) => (
-          <User key={user.id} name={user.name} />
-        ))}
-      </ul>
-    )
-
     return (
-      <div className={classes.users}>
-        <button onClick={this.toggleUsersHandler.bind(this)}>
-          {this.state.showUsers ? 'Hide' : 'Show'} Users
-        </button>
-        {this.state.showUsers && usersList}
-      </div>
+      <Fragment>
+        <div className={classes.finder}>
+          <input type="search" onChange={this.searchChangeHandler.bind(this)} />
+        </div>
+        <ErrorBoundary>
+          <Users users={this.state.filteredUsers} />
+        </ErrorBoundary>
+      </Fragment>
     )
   }
 }
-// const Users = () => {
-//   const [showUsers, setShowUsers] = useState(true);
 
-//   const toggleUsersHandler = () => {
-//     setShowUsers((curState) => !curState);
+// const UserFinder = () => {
+//   const [filteredUsers, setFilteredUsers] = useState(DUMMY_USERS);
+//   const [searchTerm, setSearchTerm] = useState('');
+
+//   useEffect(() => {
+//     setFilteredUsers(
+//       DUMMY_USERS.filter((user) => user.name.includes(searchTerm))
+//     );
+//   }, [searchTerm]);
+
+//   const searchChangeHandler = (event) => {
+//     setSearchTerm(event.target.value);
 //   };
 
-//   const usersList = (
-//     <ul>
-//       {DUMMY_USERS.map((user) => (
-//         <User key={user.id} name={user.name} />
-//       ))}
-//     </ul>
-//   );
-
 //   return (
-//     <div className={classes.users}>
-//       <button onClick={toggleUsersHandler}>
-//         {showUsers ? 'Hide' : 'Show'} Users
-//       </button>
-//       {showUsers && usersList}
-//     </div>
+//     <Fragment>
+//       <div className={classes.finder}>
+//         <input type='search' onChange={searchChangeHandler} />
+//       </div>
+//       <Users users={filteredUsers} />
+//     </Fragment>
 //   );
 // };
 
-export default Users
+export default UserFinder
