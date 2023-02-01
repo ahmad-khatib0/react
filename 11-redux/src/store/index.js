@@ -1,10 +1,10 @@
 import { createSlice, configureStore } from '@reduxjs/toolkit'
 
-const initialState = { counter: 0, showCounter: true }
+const initialCouterState = { counter: 0, showCounter: true }
 
 const counterSlice = createSlice({
   name: 'counter',
-  initialState,
+  initialState: initialCouterState,
   reducers: {
     // here we don't need the action because these methods will automatically be called for you
     // depending on which action was triggered.
@@ -30,10 +30,27 @@ const counterSlice = createSlice({
   },
 })
 
+const initialAuthState = {
+  isAuthenticated: false,
+}
+
+const authSlice = createSlice({
+  name: 'authentication',
+  initialState: initialAuthState,
+  reducers: {
+    login(state) {
+      state.isAuthenticated = true
+    },
+    logout(state) {
+      state.isAuthenticated = false
+    },
+  },
+})
+
 // ConfigureStore like createStore creates a store but it makes merging multiple reducers into one reducer easier.
 const store = configureStore({
   // reducer: { counter: counterSlice.reducer }, // with multiple reducers. but in this case:
-  reducer: counterSlice.reducer,
+  reducer: { counter: counterSlice.reducer, auth: authSlice.reducer },
 })
 
 // const counterReducer = (state = initialState, action) => {
@@ -74,5 +91,6 @@ const store = configureStore({
 // counterActions.actions.toggleCounter  will return an action object of this shape:
 // {  type: 'auto-generated-unique-name-action' }
 export const counterActions = counterSlice.actions
+export const authActions = authSlice.actions
 
 export default store
