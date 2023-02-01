@@ -1,57 +1,6 @@
 import { createSlice, configureStore } from '@reduxjs/toolkit'
-
-const initialCouterState = { counter: 0, showCounter: true }
-
-const counterSlice = createSlice({
-  name: 'counter',
-  initialState: initialCouterState,
-  reducers: {
-    // here we don't need the action because these methods will automatically be called for you
-    // depending on which action was triggered.
-    // NOTE: why you are mutating the state here?
-    // Redux toolkit internally uses another package, called immerjs, which will detect code like this
-    // and which will automatically clone the existing state, create a new state object, keep all the state
-    // which we're not editing, and override the state which we are editing in an immutable way.
-    // So we still have immutable code here
-    // another great thing here is that we don't have to return the WHOLE object each time ,
-    // but we return what is actualy related to this functionality (in this case its the INCREMENTING)
-    increment(state) {
-      state.counter++
-    },
-    decrement(state) {
-      state.counter--
-    },
-    increase(state, action) {
-      state.counter = state.counter + action.payload // this payload name is not up to you
-    },
-    toggleCounter(state) {
-      state.showCounter = !state.showCounter
-    },
-  },
-})
-
-const initialAuthState = {
-  isAuthenticated: false,
-}
-
-const authSlice = createSlice({
-  name: 'authentication',
-  initialState: initialAuthState,
-  reducers: {
-    login(state) {
-      state.isAuthenticated = true
-    },
-    logout(state) {
-      state.isAuthenticated = false
-    },
-  },
-})
-
-// ConfigureStore like createStore creates a store but it makes merging multiple reducers into one reducer easier.
-const store = configureStore({
-  // reducer: { counter: counterSlice.reducer }, // with multiple reducers. but in this case:
-  reducer: { counter: counterSlice.reducer, auth: authSlice.reducer },
-})
+import authReducer from './auth'
+import counterReducer from './counter'
 
 // const counterReducer = (state = initialState, action) => {
 //   if (action.type === 'increment') {
@@ -87,10 +36,14 @@ const store = configureStore({
 
 // const store = createStore(counterReducer);
 
-// calling the actoin is a something that reduc-toolkit will do for us, for exampe: for the toggleCounter
+// calling the actoin is a something that redux-toolkit will do for us, for exampe: for the toggleCounter
 // counterActions.actions.toggleCounter  will return an action object of this shape:
 // {  type: 'auto-generated-unique-name-action' }
-export const counterActions = counterSlice.actions
-export const authActions = authSlice.actions
+
+// ConfigureStore like createStore creates a store but it makes merging multiple reducers into one reducer easier.
+const store = configureStore({
+  // reducer: { counter: counterSlice.reducer }, // with multiple reducers. but in this case:
+  reducer: { counter: counterReducer, auth: authReducer },
+})
 
 export default store
