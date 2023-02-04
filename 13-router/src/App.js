@@ -24,7 +24,9 @@ const router = createBrowserRouter([
     element: <RootLayout />,
     errorElement: <ErrorPage />,
     children: [
-      { path: '/', element: <HomePage /> },
+      // set this to true. This turns this route into a so-called index route, which simply means it's
+      // the default route that should be displayed if the parent route's path is currently active.
+      { index: true, element: <HomePage /> },
       { path: 'products', element: <ProductsPage /> },
       { path: 'products/:productId', element: <ProductDetailPage /> },
     ],
