@@ -3,6 +3,7 @@ import { useRouteLoaderData, json, redirect, defer, Await } from 'react-router-d
 
 import EventItem from '../components/EventItem'
 import EventsList from '../components/EventsList'
+import { getAuthToken } from '../util/auth'
 
 function EventDetailPage() {
   const { event, events } = useRouteLoaderData('event-detail')
@@ -25,12 +26,7 @@ async function loadEvent(id) {
   const response = await fetch('http://localhost:8080/events/' + id)
 
   if (!response.ok) {
-    throw json(
-      { message: 'Could not fetch details for selected event.' },
-      {
-        status: 500,
-      },
-    )
+    throw json({ message: 'Could not fetch details for selected event.' }, { status: 500 })
   } else {
     const resData = await response.json()
     return resData.event
@@ -45,12 +41,7 @@ async function loadEvents() {
     // throw new Response(JSON.stringify({ message: 'Could not fetch events.' }), {
     //   status: 500,
     // });
-    throw json(
-      { message: 'Could not fetch events.' },
-      {
-        status: 500,
-      },
-    )
+    throw json({ message: 'Could not fetch events.' }, { status: 500 })
   } else {
     const resData = await response.json()
     return resData.events
@@ -68,8 +59,13 @@ export async function loader({ request, params }) {
 
 export async function action({ params, request }) {
   const eventId = params.eventId
+
+  const token = getAuthToken()
   const response = await fetch('http://localhost:8080/events/' + eventId, {
     method: request.method,
+    headers: {
+      Authorization: 'Bearer ' + token,
+    },
   })
 
   if (!response.ok) {
