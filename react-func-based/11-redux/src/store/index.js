@@ -36,7 +36,7 @@ import counterReducer from './counter'
 
 // const store = createStore(counterReducer);
 
-// calling the actoin is a something that redux-toolkit will do for us, for exampe: for the toggleCounter
+// calling the action is a something that redux-toolkit will do for us, for example: for the toggleCounter
 // counterActions.actions.toggleCounter  will return an action object of this shape:
 // {  type: 'auto-generated-unique-name-action' }
 

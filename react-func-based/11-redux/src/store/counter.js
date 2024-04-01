@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-const initialCouterState = { counter: 0, showCounter: true }
+const initialCounterState = { counter: 0, showCounter: true }
 
 const counterSlice = createSlice({
   name: 'counter',
-  initialState: initialCouterState,
+  initialState: initialCounterState,
   reducers: {
     // here we don't need the action because these methods will automatically be called for you
     // depending on which action was triggered.
@@ -14,7 +14,7 @@ const counterSlice = createSlice({
     // which we're not editing, and override the state which we are editing in an immutable way.
     // So we still have immutable code here
     // another great thing here is that we don't have to return the WHOLE object each time ,
-    // but we return what is actualy related to this functionality (in this case its the INCREMENTING)
+    // but we return what is actually related to this functionality (in this case its the INCREMENTING)
     increment(state) {
       state.counter++
     },
